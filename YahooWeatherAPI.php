@@ -95,7 +95,7 @@ class YahooWeatherAPI {
 	}// end constructor 
 	
 	
-	public function getTemp()
+	public function getWeather()
 	{
 
  		$curl = curl_init();
