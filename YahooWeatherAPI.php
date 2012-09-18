@@ -20,6 +20,10 @@ class YahooWeatherAPI {
 	// provided by Yahoo (http://developer.yahoo.com/weather/index.html)
 	private $conditionCodes			= array();
 
+	// stores the weather data after being
+	// pulled & parsed
+	private $weatherData			= null;
+
 	// Methods
 	///////////////////////////////////////////////////////////////
 
@@ -92,10 +96,40 @@ class YahooWeatherAPI {
 		$this->conditionCodes[47]		= "isolated thundershowers";
 		$this->conditionCodes[3200]		= "not available";
 		
+
+		$this->weatherData = $this->parseFeed($this->getFeed());
+
+		return $this;
+
 	}// end constructor 
 	
-	
+
+
+	// returns full weather data 2 item array:
+	// 'condition' and 'forecast'
 	public function getWeather()
+	{
+
+ 		return $this->weatherData;
+	}
+	
+
+
+	public function getCurrentCondition()
+	{
+
+		return $this->weatherData['condition']['text'];
+	}
+
+
+	public function getCurrentTemp()
+	{
+
+		return $this->weatherData['condition']['temp'];
+	}
+
+
+	private function getFeed()
 	{
 
  		$curl = curl_init();
@@ -105,11 +139,12 @@ class YahooWeatherAPI {
         $result = curl_exec($curl);
 
         curl_close($curl);
-        
-        return $this->parseFeed($result);
+
+        return $result;
 	}
+
 	
-	
+
 	private function parseFeed($yahooFeed)
 	{
 	
